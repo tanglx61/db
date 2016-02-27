@@ -1,13 +1,11 @@
 User(**uid**, username, password, email, photoUrl)
 
-Post(**pid**, title, content, timestamp, votes, ownerUsername, *uid*)
+Post(**pid**, title, content, timestamp, votes, *uid*)
 * uid -\> User
-* ownerUsername is denormalized for performance
 
-Comment(**cid**, content, timestamp, votes, ownerUsername, *pid*, *uid*)
+Comment(**cid**, content, timestamp, votes, *pid*, *uid*)
 * pid -\> Post
 * uid -\> User
-* ownerUsername is denormalized for performance
 
 Notification(**nid**, type, content, timestamp, read, *uid*)
 * uid -\> User

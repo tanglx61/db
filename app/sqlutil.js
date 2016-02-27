@@ -26,7 +26,9 @@ function formatAttributes(params, singleQuotes) {
  * @param  {[[String]]} data       array of array of data. inner array represents a row of data to insert
  * @return {String}            formatted statement
  */
-exports.formatInsertStatement = function(tableName, attributes, data) {
+exports.formatInsertStatement = function(tableName, attributes, data, terminatingSemiColon) {
+	if (terminatingSemiColon === null) terminatingSemiColon = true;
+
 	var statement = 'INSERT INTO \"' + tableName + '\"' + formatAttributes(attributes, false) + ' VALUES \n';
 
 	var username, password, email, photoUrl;
@@ -38,7 +40,7 @@ exports.formatInsertStatement = function(tableName, attributes, data) {
 		if (i < data.length-1) {
 			statement += ',\n';
 		} else {
-			statement += ';';
+			statement += terminatingSemiColon ? ';' : '';
 		}
 	}
 

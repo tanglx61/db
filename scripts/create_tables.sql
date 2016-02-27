@@ -12,9 +12,8 @@ CREATE TABLE "Post" (
     "pid" serial,
     "title" text NOT NULL,
     "content" text NOT NULL,
-    "timestamp" date NOT NULL,
+    "timestamp" timestamp NOT NULL,
     "votes" integer NOT NULL,
-    "ownerUsername" text NOT NULL,
     "uid" integer NOT NULL,
     PRIMARY KEY ("pid"),
     FOREIGN KEY ("uid") REFERENCES "User"("uid")
@@ -24,9 +23,8 @@ CREATE TABLE "Post" (
 CREATE TABLE "Comment" (
 	"cid" serial,
 	"content" text NOT NULL,
-	"timestamp" date NOT NULL,
+	"timestamp" timestamp NOT NULL,
 	"votes" integer NOT NULL,
-    "ownerUsername" text NOT NULL,
     "pid" integer NOT NULL,
     "uid" integer NOT NULL,
     PRIMARY KEY ("cid"),
@@ -39,7 +37,7 @@ CREATE TABLE "Notification" (
     "nid" serial,
     "type" text NOT NULL,
     "content" text NOT NULL,
-    "timestamp" date NOT NULL,
+    "timestamp" timestamp NOT NULL,
     "uid" integer,
     PRIMARY KEY ("nid"),
     FOREIGN KEY ("uid") REFERENCES "User"("uid")
@@ -103,7 +101,7 @@ CREATE TABLE "AnalyticsProfile" (
     "total_post_votes" integer NOT NULL DEFAULT '0',
     "total_comment_votes" integer NOT NULL DEFAULT '0',
     "total_post_viewed" integer NOT NULL DEFAULT '0',
-    "last_update" date NOT NULL,
+    "last_update" timestamp NOT NULL,
     "uid" integer NOT NULL,
     PRIMARY KEY ("apid"),
     FOREIGN KEY ("uid") REFERENCES "User"("uid")
@@ -113,7 +111,7 @@ CREATE TABLE "Event" (
     "eid" serial,
     "type" text NOT NULL,
     "data" integer NOT NULL,
-    "timestamp" date NOT NULL,
+    "timestamp" timestamp NOT NULL,
     "apid" integer NOT NULL,
     PRIMARY KEY ("eid"),
     FOREIGN KEY ("apid") REFERENCES "AnalyticsProfile"("apid")

@@ -1,0 +1,51 @@
+[
+	{
+		"name": "Funny",
+		"description": "e.g. lol, joke, prank, fail, awkward"
+	},
+	{
+		"name": "WTF",
+		"description": "e.g. eww, dafuq, OMG, spider"
+	},
+	{
+		"name": "Geeky",
+		"description": "e.g. GTAV, The Avengers, One Piece"
+	},
+	{
+		"name": "Meme",
+		"description": "e.g. Bad Luck Brian, Confession Bear"
+	},
+
+	{
+		"name": "Cute Animals",
+		"description": "e.g. aww, pet, dog, cat"
+	},
+
+	{
+		"name": "Comic",
+		"description": "e.g. rage comic, web comic, cartoon"
+	},
+
+	{
+		"name": "Cosplay",
+		"description": "e.g. Comic Con, roleplay"
+	},
+	{
+		"name": "Food",
+		"description": "e.g. recipe, pizza, beer, dessert"
+	},
+	{
+		"name": "Girl",
+		"description": "e.g. beauty, Taylor Swift"
+	},
+
+	{
+		"name": "Timely",
+		"description": "e.g. latest, news, festival"
+	},
+	{
+		"name": "Design",
+		"description": "e.g. DIY, artwork, photography"
+	}
+
+]
