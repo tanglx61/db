@@ -7,7 +7,7 @@ var faker = require('faker');
 var _ = require('lodash');
 
 var db = require('./app/db');
-var scripts = require('./app/scripts');
+var DBManager = require('./app/dbman');
 
 var CHUNK_SIZE = 500;
 
@@ -20,7 +20,9 @@ var optionValue = process.argv[3];
 
 
 var dispatcherMap = {
-	"-i": reinitializeTables,
+	"-i": function(callback){
+		DBManager.reinitializeTables(db, callback);
+	},
 
 	'-u': function(callback) {
 		User.populate({db: db, count: optionValue, chunkSize: CHUNK_SIZE}, callback);
@@ -46,21 +48,5 @@ db.ready(function(err) {
 
 
 
-function reinitializeTables(callback) {
-	console.time('reinitializingTables');
-	async.series([dropTables, createTables], function(err){
-		console.timeEnd('reinitializingTables');
-		if (callback) callback(err);
-	});
-}
-
-
-function dropTables(callback) {
-	db.query(scripts.dropTables, callback);
-}
-
-function createTables(callback) {
-	db.query(scripts.createTables, callback);
-}
 
 
