@@ -4,6 +4,7 @@
 var pg = require('pg');
 var databaseName = 'comp421';
 var conString = "postgres://localhost/" + databaseName;
+var async = require('async');
 
 var client = new pg.Client(conString);
 
@@ -38,6 +39,13 @@ exports.query = function(queryString, callback) {
 
 		return callback(err, result);
 	});
+};
+
+exports.multiQuery = function(queries, callback) {
+	var self = this;
+	async.eachSeries(queries, function(query, next){
+		self.query(query, next);
+	}, callback);
 };
 
 

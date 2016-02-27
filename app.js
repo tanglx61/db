@@ -9,27 +9,41 @@ var _ = require('lodash');
 var db = require('./db');
 var scripts = require('./scripts');
 
-var USER_COUNT = 5;
+var USER_COUNT = 1000000;
+var CHUNK_SIZE = 500;
+
+
+var option = process.argv[2];
+
+
+var dispatcherMap = {
+	"-i": reinitializeTables,
+	'-u': populateUsers,
+};
+
 
 db.ready(function(err) {
-	if (err) return;
+	if (err || !option) return db.close();
 
-
-	// async.series([dropTables, createTables], function(err){
-	// 	if (err) return console.log(err);
-	// 	console.log(chalk.green('done!'));
-	// });
-
-	populateUsers(function(err, result){
-		if (err) console.log(err);
-		else console.log(chalk.green('done!'));
-		process.exit();
-	});
+	var f = dispatcherMap[option];
+	if (f) {
+		f(function(err){
+			if (err) console.error(err);
+			process.exit(0);
+		});
+	}
 
 });
 
 
 
+function reinitializeTables(callback) {
+	console.time('reinitializingTables');
+	async.series([dropTables, createTables], function(err){
+		console.timeEnd('reinitializingTables');
+		if (callback) callback(err);
+	});
+}
 
 
 function dropTables(callback) {
@@ -42,6 +56,7 @@ function createTables(callback) {
 
 
 function populateUsers(callback) {
+	console.time('populateUsers');
 	var username, password, email, photoUrl;
 	var users = [];
 
@@ -55,15 +70,26 @@ function populateUsers(callback) {
 	}
 
 
-
-	var statement = formatInsertStatement('User', ['username', 'password', 'email', 'photoUrl'], users);
+	//var statement = formatInsertStatement('User', ['username', 'password', 'email', 'photoUrl'], users);
 	
 
+	var statements = _.map( _.chunk(users, CHUNK_SIZE), function(userChunk){
+		return formatInsertStatement('User', ['username', 'password', 'email', 'photoUrl'], userChunk);
+	});
 
-	console.log(statement);
-	db.query(statement, callback);
+
+
+
+	//console.log(statement);
+	db.multiQuery(statements, function(err, results){
+		console.timeEnd('populateUsers');
+
+		if (callback) return callback(err, results);
+	});
 
 }
+
+
 
 
 /**
@@ -82,7 +108,7 @@ function formatInsertStatement(tableName, attributes, data) {
 
 		statement += formatAttributes(data[i], true);
 
-		if (i < USER_COUNT-1) {
+		if (i < data.length-1) {
 			statement += ',\n';
 		} else {
 			statement += ';';
@@ -93,9 +119,6 @@ function formatInsertStatement(tableName, attributes, data) {
 	return statement;
 
 }
-
-
-
 
 
 
