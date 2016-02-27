@@ -9,11 +9,12 @@ var _ = require('lodash');
 var db = require('./db');
 var scripts = require('./scripts');
 
-var USER_COUNT = 1000000;
+var DEFAULT_USER_COUNT = 100000;
 var CHUNK_SIZE = 500;
 
 
 var option = process.argv[2];
+var optionValue = process.argv[3];
 
 
 var dispatcherMap = {
@@ -60,7 +61,9 @@ function populateUsers(callback) {
 	var username, password, email, photoUrl;
 	var users = [];
 
-	for (var i=0; i<USER_COUNT; i++) {
+	var count = (optionValue && Number(optionValue))  || DEFAULT_USER_COUNT;
+
+	for (var i=0; i<count; i++) {
 		username = faker.internet.userName();
 		password = faker.internet.password(8,1);
 		email = username + "@gmail.com";
