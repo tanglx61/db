@@ -5,7 +5,13 @@ function formatAttributes(params, singleQuotes) {
 
 	for (var i=0; i<params.length; i++){
 		var p = params[i];
-		s += quote + p + quote;
+
+		if (p.variable) {
+			s +=  p.variable ;
+		} else {
+			s += quote + p + quote;
+		}
+		
 
 		if (i != params.length - 1) {
 			s += ',';

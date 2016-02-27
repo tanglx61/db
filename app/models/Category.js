@@ -22,7 +22,7 @@ function randomCatIds(n) {
 	for (var i=0; i<n; i++) {
 		var id = randomCatId();
 		if (ids.indexOf(id) == -1) {
-			ids.push(randomCatId());
+			ids.push(id);
 		} else {
 			i--;
 		}

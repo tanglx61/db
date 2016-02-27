@@ -33,10 +33,10 @@ function randomTags(n) {
 /**
  * ensure tags exists in the database. if not, insert them
  */
-function ensureTags(tags) {
+function getEnsureTagsStatement(tags) {
 	var statement = '';
 	_.each(tags, function(tag){
-		statement += "INSERT INTO \"Tag\"(\"name\") SELECT '" + tag + "' WHERE NOT EXISTS (SELECT 1 FROM \"Tag\" WHERE 'tag'='" + tag + "');\n"; 
+		statement += "INSERT INTO \"Tag\"(\"name\") SELECT '" + tag + "' WHERE NOT EXISTS (SELECT 1 FROM \"Tag\" WHERE name='" + tag + "');\n"; 
 	});
 
 	return statement;
@@ -46,19 +46,25 @@ function ensureTags(tags) {
 
 
 function tagPost(db, pid, tags, callback) {
-	var statement = ensureTags(tags);
-	tags = _.map(tags, function(tag){
-		return [pid, tag];
-	});
-	statement += sqlutil.formatInsertStatement('PostTag', ['pid', 'tag'], tags);
+	var statement = getTagPostStatement(pid, tags);
 
 	db.query(statement, callback);
 
 }
 
 
+function getTagPostStatement(pid, tags) {
+	var statement = getEnsureTagsStatement(tags);
+	tags = _.map(tags, function(tag){
+		return [pid, tag];
+	});
+	statement += sqlutil.formatInsertStatement('PostTag', ['pid', 'tag'], tags);
+
+	return statement;
+}
+
 
 exports.randomTag = randomTag;
 exports.randomTags = randomTags;
-exports.ensureTags = ensureTags;
 exports.tagPost = tagPost;
+exports.getTagPostStatement = getTagPostStatement;

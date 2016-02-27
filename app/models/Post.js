@@ -63,21 +63,31 @@ function create(opts, callback) {
 	var db = opts.db;
 	var post = opts.post;
 
-	var statement = sqlutil.formatInsertStatement('Post', 
-		['title', 'content', 'uid'], 
-		[[post.title, post.content, post.uid]], false) + ' RETURNING pid';
+	// var statement = sqlutil.formatInsertStatement('Post', 
+	// 	['title', 'content', 'uid'], 
+	// 	[[post.title, post.content, post.uid]], false) + ' RETURNING pid';
 
+	var statement = 
+	"DO $$ \n" + 
+	"DECLARE current_pid integer;\n" + 
+	"BEGIN\n" +
+	sqlutil.formatInsertStatement('Post', ['title', 'content', 'uid'], [[post.title, post.content, post.uid]], false) + ' RETURNING pid INTO current_pid;\n';
 
-	db.query(statement, function(err, result){
-		var pid = result.rows[0].pid;
-		
-		if (post.tags) {
-			Tag.tagPost(db, pid, post.tags, callback);
-		}
+	_.each(post.categories, function(cat){
+		statement += "INSERT INTO \"PostCategory\"(\"pid\", \"catId\") VALUES (current_pid, '" +  cat + "');\n";
 	});
 
-}
 
-function tag(post, tags, callback) {
+	if (post.tags) {
+		statement += Tag.getTagPostStatement({variable: 'current_pid'}, post.tags);
+	}
+
+	statement += "\nEND $$;";
+
+	//console.log(statement);
+
+	return db.query(statement, callback);
+
+	
 
 }
