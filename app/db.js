@@ -49,7 +49,4 @@ exports.multiQuery = function(queries, callback) {
 };
 
 
-exports.querySync = function(queryString) {
-
-};
 
