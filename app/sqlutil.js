@@ -27,7 +27,7 @@ function formatAttributes(params, singleQuotes) {
  * @return {String}            formatted statement
  */
 exports.formatInsertStatement = function(tableName, attributes, data, terminatingSemiColon) {
-	if (terminatingSemiColon === null) terminatingSemiColon = true;
+	if (terminatingSemiColon === undefined) terminatingSemiColon = true;
 
 	var statement = 'INSERT INTO \"' + tableName + '\"' + formatAttributes(attributes, false) + ' VALUES \n';
 

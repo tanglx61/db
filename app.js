@@ -9,36 +9,66 @@ var _ = require('lodash');
 var db = require('./app/db');
 var DBManager = require('./app/dbman');
 
-var CHUNK_SIZE = 500;
+
+var config = require('./app/config');
 
 
 var User = require('./app/models/User');
 var Category = require('./app/models/Category');
+var Post = require('./app/models/Post');
 
 
 var option = process.argv[2];
 var optionValue = process.argv[3];
 
 
+function dropTables(callback) {
+	console.log('dropping all tables');
+	DBManager.dropTables(db, callback);
+}
+
+function reinitializeTables(callback) {
+	DBManager.reinitializeTables(db, callback);
+}
+
+
+function bulkPopulatingUsers(callback) {
+	User.populate({db: db, count: optionValue}, callback);
+}
+
+function populateUsers(callback) {
+	User.populate({db: db, count: optionValue, useApplicationLogic: true}, callback);
+}
+
+function populateCategories(callback) {
+	Category.populate(db, callback);
+}
+
+function populatePosts(callback) {
+	Post.populate({db: db, count: optionValue}, callback);
+}
+
+
+function initDatabase(callback) {
+	console.log('running automated database population with ' + config.users +'Users, ' + config.posts + ' Posts');
+	async.series([
+		reinitializeTables,
+		populateUsers,
+		populateCategories,
+		populatePosts
+	], callback);
+}
+
+
 var dispatcherMap = {
-	"-i": function(callback){
-		DBManager.reinitializeTables(db, callback);
-	},
+	"-d": dropTables,
+	"-r": reinitializeTables,
+	"-i": initDatabase,
+	'--users_bulk': bulkPopulatingUsers,
+	'--users': populateUsers,
 
-	'-u_bulk': function(callback) {
-		console.log('populating ' + optionValue + ' Users WITHOUT using application logic');
-		User.populate({db: db, count: optionValue, chunkSize: CHUNK_SIZE}, callback);
-	},
-
-	'-u': function(callback) {
-		console.log('populating ' + optionValue + ' Users using application logic');
-		User.populate({db: db, count: optionValue, chunkSize: CHUNK_SIZE, useApplicationLogic: true}, callback);
-	},
-	'-cat': function(callback) {
-		console.log('populating ' + optionValue + ' Categories using prepopulated data');
-		Category.populate(db, callback);
-
-	}
+	'--categories': populateCategories,
+	'--posts': populatePosts
 };
 
 var f = dispatcherMap[option];

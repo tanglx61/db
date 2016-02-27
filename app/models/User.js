@@ -7,7 +7,8 @@ var faker = require('faker');
 var chalk = require('chalk');
 var async = require('async');
 
-var DEFAULT_USER_COUNT = 100000;
+var config = require('../config');
+var DEFAULT_USER_COUNT = config.users;
 
 /**
  * mass populate initial dataset.
@@ -15,14 +16,17 @@ var DEFAULT_USER_COUNT = 100000;
  */
 exports.populate = function(opts, callback) {
 	console.time('populateUsers');
-	var db = opts.db;
-	var chunkSize = opts.chunkSize;
+
 	var c = opts.count;
+	var count = (c && Number(c))  || DEFAULT_USER_COUNT;
+	console.info('populating ' + count + ' Users...');
+
+	var db = opts.db;
+	var chunkSize = config.chunkSize;
 	var useApplicationLogic = opts.useApplicationLogic;
 	var username, password, email, photoUrl;
 	var users = [];
 
-	var count = (c && Number(c))  || DEFAULT_USER_COUNT;
 
 	for (var i=0; i<count; i++) {
 		username = faker.internet.userName();
@@ -39,13 +43,14 @@ exports.populate = function(opts, callback) {
 				next(err);
 			});
 		}, function(err){
+			console.timeEnd('populateUsers');
 			callback(err);
 		});
 
 
 	} else {
 		var statements = _.map( _.chunk(users, chunkSize), function(userChunk){
-			return sqlutil.formatInsertStatement('User', ['username', 'password', 'email', 'photoUrl'], userChunk);
+			return sqlutil.formatInsertStatement('User', ['username', 'password', 'email', 'photo_url'], userChunk);
 		});
 
 		db.multiQuery(statements, function(err, results){
@@ -78,10 +83,12 @@ function create(opts, callback) {
 	"DO $$ \n" + 
 	"DECLARE current_id integer;\n" + 
 	"BEGIN\n" +
-	sqlutil.formatInsertStatement('User', ['username', 'password', 'email', 'photoUrl'], [[username, password, email, photoUrl]]) + ' RETURNING uid INTO current_id;\n' +
+	sqlutil.formatInsertStatement('User', ['username', 'password', 'email', 'photo_url'], [[username, password, email, photoUrl]], false) + ' RETURNING uid INTO current_id;\n' +
 
 	"INSERT INTO \"AnalyticsProfile\"(\"uid\", \"last_update\") VALUES (current_id, NOW());\n" +
 	"END $$;";
+
+	//console.log(statement);
 
 	db.query(statement, function(err, result) {
 		if (callback) return callback(err, result);

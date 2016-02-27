@@ -5,45 +5,72 @@ var sqlutil = require('../sqlutil');
 var _ = require('lodash');
 var faker = require('faker');
 var chalk = require('chalk');
+var async = require('async');
 
-var DEFAULT_USER_COUNT = 100000;
+var DEFAULT_POST_COUNT = require('../config').posts;
+
+var Category = require('./Category');
+var Tag = require('./Tag');
+
+
 
 exports.populate = function(opts, callback) {
 	console.time('populatePosts');
-	var db = opts.db;
-	var chunkSize = opts.chunkSize;
+	
 	var c = opts.count;
+	var count = (c && Number(c))  || DEFAULT_POST_COUNT;
 
+	console.info('populating ' + count + ' Posts...');
 
-	var title, content, timestamp, votes, ownerUsername;
-	var users = [];
+	var db = opts.db;
+	var title, content;
 
-	var count = (c && Number(c))  || DEFAULT_USER_COUNT;
+	var posts = [];
+
 
 	for (var i=0; i<count; i++) {
-		username = faker.internet.userName();
-		password = faker.internet.password(8,1);
-		email = username + "@gmail.com";
-		photoUrl = faker.image.avatar();
 
-		users.push([username, password, email, photoUrl]);
+		var post = {
+			title: faker.company.bs(),
+			content: faker.image.imageUrl(),
+			uid: faker.random.number({min:1, max:100}),
+			categories: Category.randomCatIds(),
+			tags: Tag.randomTags()
+		};
+
+
+		//console.log(post);
+
+
+		posts.push(post);
 	}
 
-
-	var statements = _.map( _.chunk(users, chunkSize), function(userChunk){
-		return sqlutil.formatInsertStatement('User', ['username', 'password', 'email', 'photoUrl'], userChunk);
+	async.eachSeries(posts, function(post, next){
+		create({db: db, post: post}, next);
+	}, function(err){
+		console.timeEnd('populatePosts');
+		if (callback) callback(err);
 	});
 
-	db.multiQuery(statements, function(err, results){
-		if (!err) console.log(chalk.green(c + ' users populated'));
 
-		console.timeEnd('populateUsers');
-
-		if (callback) return callback(err, results);
-	});
 };
 
 
-function populateOne(db, callback) {
-	
+/**
+ * create a post with categories, tags
+ */
+function create(opts, callback) {
+	var db = opts.db;
+	var post = opts.post;
+
+	var statement = sqlutil.formatInsertStatement('Post', 
+		['title', 'content', 'uid'], 
+		[[post.title, post.content, post.uid]]);
+
+	db.query(statement, callback);
+
+}
+
+function tag(post, tags, callback) {
+
 }

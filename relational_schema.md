@@ -1,4 +1,4 @@
-User(**uid**, username, password, email, photoUrl)
+User(**uid**, username, password, email, photo_url, created_on)
 
 Post(**pid**, title, content, timestamp, votes, *uid*)
 * uid -\> User
@@ -17,11 +17,11 @@ PostCategory(*pid*, *catId*)
 * pid -\> Post
 * catId -\> Category
 
-Tag(**tagId**, name)
+Tag(**tag_name**)
 
-PostTag(*pid*, *tagId*)
+PostTag(*pid*, *tag_name*)
 * pid -\> Post
-* tagId -\> Tag
+* tag_name_ -\> Tag
 
 PostVote(*uid*, *pid*, vote)
 * uid -\> User
