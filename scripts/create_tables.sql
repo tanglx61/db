@@ -61,17 +61,16 @@ CREATE TABLE "PostCategory" (
 
 
 CREATE TABLE "Tag" (
-    "tagId" serial,
-    "name" text NOT NULL,
-    PRIMARY KEY ("tagId")
+    "name" text NOT NULL UNIQUE,
+    PRIMARY KEY ("name")
 );
 
 
 CREATE TABLE "PostTag" (
     "pid" integer NOT NULL,
-    "tagId" integer NOT NULL,
+    "tag" text NOT NULL,
     FOREIGN KEY ("pid") REFERENCES "Post"("pid"),
-    FOREIGN KEY ("tagId") REFERENCES "Tag"("tagId")
+    FOREIGN KEY ("tag") REFERENCES "Tag"("name")
 );
 
 

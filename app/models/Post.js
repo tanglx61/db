@@ -65,9 +65,16 @@ function create(opts, callback) {
 
 	var statement = sqlutil.formatInsertStatement('Post', 
 		['title', 'content', 'uid'], 
-		[[post.title, post.content, post.uid]]);
+		[[post.title, post.content, post.uid]], false) + ' RETURNING pid';
 
-	db.query(statement, callback);
+
+	db.query(statement, function(err, result){
+		var pid = result.rows[0].pid;
+		
+		if (post.tags) {
+			Tag.tagPost(db, pid, post.tags, callback);
+		}
+	});
 
 }
 

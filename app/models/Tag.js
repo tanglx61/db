@@ -30,9 +30,35 @@ function randomTags(n) {
 	return tags;
 }
 
+/**
+ * ensure tags exists in the database. if not, insert them
+ */
+function ensureTags(tags) {
+	var statement = '';
+	_.each(tags, function(tag){
+		statement += "INSERT INTO \"Tag\"(\"name\") SELECT '" + tag + "' WHERE NOT EXISTS (SELECT 1 FROM \"Tag\" WHERE 'tag'='" + tag + "');\n"; 
+	});
+
+	return statement;
+	//console.log(statement);
+	
+}	
+
+
+function tagPost(db, pid, tags, callback) {
+	var statement = ensureTags(tags);
+	tags = _.map(tags, function(tag){
+		return [pid, tag];
+	});
+	statement += sqlutil.formatInsertStatement('PostTag', ['pid', 'tag'], tags);
+
+	db.query(statement, callback);
+
+}
+
+
 
 exports.randomTag = randomTag;
-
-
-
 exports.randomTags = randomTags;
+exports.ensureTags = ensureTags;
+exports.tagPost = tagPost;
