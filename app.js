@@ -18,7 +18,7 @@ var Category = require('./app/models/Category');
 var Post = require('./app/models/Post');
 var Comment = require('./app/models/Comment');
 var Notification = require('./app/models/Notification');
-
+var Vote = require('./app/models/Vote');
 
 var option = process.argv[2];
 var optionValue = process.argv[3];
@@ -59,6 +59,15 @@ function populateNotifications(callback) {
 	Notification.populate({db: db, count: optionValue}, callback);
 }
 
+function populatePostVotes(callback) {
+	Vote.populate({db: db, count: optionValue, isPost: true}, callback);
+}
+
+function populateCommentVotes(callback) {
+	Vote.populate({db: db, count: optionValue, isPost: false}, callback);
+}
+
+
 function initDatabase(callback) {
 	console.log('running automated database population with ' + config.users +'Users, ' + config.posts + ' Posts');
 	optionValue = null;
@@ -68,7 +77,9 @@ function initDatabase(callback) {
 		populateCategories,
 		populatePosts,
 		populateComments,
-		populateNotifications
+		populateNotifications,
+		populatePostVotes,
+		populateCommentVotes
 	], callback);
 }
 
@@ -84,6 +95,8 @@ var dispatcherMap = {
 	'--posts': populatePosts,
 	'--comments': populateComments,
 	'--notifications' : populateNotifications,
+	'--postvotes': populatePostVotes,
+	'--commentvotes': populateCommentVotes
 };
 
 var f = dispatcherMap[option];

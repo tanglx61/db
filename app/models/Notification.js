@@ -67,7 +67,7 @@ exports.populate = function(opts, callback) {
 
 
 exports.populateRead = function(opts, callback) {
-
+	
 };
 
 function readNotification(opts, callback) {

@@ -3,5 +3,6 @@ module.exports = {
 	posts: 1000,
 	comments: 3000,
 	notifications: 5000,
+	votes: 10000,
 	chunkSize: 500	
 };
