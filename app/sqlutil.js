@@ -1,3 +1,13 @@
+if (!String.format) {
+  String.format = function(format) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return format.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined' ? args[number] : match;
+    });
+  };
+}
+
+
 function escapeString(val) {
   val = val.replace(/[\0\n\r\b\t\\'"\x1a]/g, function (s) {
     switch (s) {
@@ -67,7 +77,13 @@ function formatAttributes(params, singleQuotes) {
 exports.formatInsertStatement = function(tableName, attributes, data, terminatingSemiColon) {
 	if (terminatingSemiColon === undefined) terminatingSemiColon = true;
 
-	var statement = 'INSERT INTO \"' + tableName + '\"' + formatAttributes(attributes, false) + ' VALUES \n';
+	var statement = 'INSERT INTO \"' + tableName + '\"' + formatAttributes(attributes, false);
+
+	if (data) {
+		statement += ' VALUES \n';
+	} else {
+		return statement;
+	}
 
 	for (var i=0; i<data.length; i++) {
 		

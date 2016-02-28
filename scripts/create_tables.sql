@@ -39,9 +39,12 @@ CREATE TABLE "Notification" (
     "type" text NOT NULL,
     "content" text NOT NULL,
     "timestamp" timestamp NOT NULL DEFAULT NOW(),
-    "uid" integer,
+    "read_on" timestamp, 
+    "uid" integer NOT NULL,
+    "from" integer,
     PRIMARY KEY ("nid"),
-    FOREIGN KEY ("uid") REFERENCES "User"("uid")
+    FOREIGN KEY ("uid") REFERENCES "User"("uid"),
+    FOREIGN KEY ("from") REFERENCES "User"("uid")
 );
 
 CREATE TABLE "Category" (

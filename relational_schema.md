@@ -7,8 +7,9 @@ Comment(**cid**, content, timestamp, votes, *pid*, *uid*)
 * pid -\> Post
 * uid -\> User
 
-Notification(**nid**, type, content, timestamp, read, *uid*)
+Notification(**nid**, type, content, timestamp, read_on, *uid*, *from*)
 * uid -\> User
+* from -\> User
 
 
 Category(catId, name, description)
