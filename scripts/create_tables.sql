@@ -25,7 +25,7 @@ CREATE TABLE "Comment" (
 	"cid" serial,
 	"content" text NOT NULL,
 	"timestamp" timestamp NOT NULL DEFAULT NOW(),
-	"votes" integer NOT NULL,
+	"votes" integer NOT NULL DEFAULT '0',
     "pid" integer NOT NULL,
     "uid" integer NOT NULL,
     PRIMARY KEY ("cid"),

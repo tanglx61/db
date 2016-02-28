@@ -6,8 +6,8 @@ var _ = require('lodash');
 var faker = require('faker');
 var chalk = require('chalk');
 var async = require('async');
-
-var DEFAULT_POST_COUNT = require('../config').posts;
+var config = require('../config');
+var DEFAULT_POST_COUNT = config.posts;
 
 var Category = require('./Category');
 var Tag = require('./Tag');
@@ -33,7 +33,7 @@ exports.populate = function(opts, callback) {
 		var post = {
 			title: faker.company.bs(),
 			content: faker.image.imageUrl(),
-			uid: faker.random.number({min:1, max:100}),
+			uid: faker.random.number({min:1, max:config.users}),
 			categories: Category.randomCatIds(),
 			tags: Tag.randomTags()
 		};

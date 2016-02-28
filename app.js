@@ -16,6 +16,7 @@ var config = require('./app/config');
 var User = require('./app/models/User');
 var Category = require('./app/models/Category');
 var Post = require('./app/models/Post');
+var Comment = require('./app/models/Comment');
 
 
 var option = process.argv[2];
@@ -49,13 +50,20 @@ function populatePosts(callback) {
 }
 
 
+function populateComments(callback) {
+	Comment.populate({db: db, count: optionValue}, callback);
+}
+
+
 function initDatabase(callback) {
 	console.log('running automated database population with ' + config.users +'Users, ' + config.posts + ' Posts');
+	optionValue = null;
 	async.series([
 		reinitializeTables,
 		populateUsers,
 		populateCategories,
-		populatePosts
+		populatePosts,
+		populateComments
 	], callback);
 }
 
@@ -68,7 +76,8 @@ var dispatcherMap = {
 	'--users': populateUsers,
 
 	'--categories': populateCategories,
-	'--posts': populatePosts
+	'--posts': populatePosts,
+	'--comments': populateComments
 };
 
 var f = dispatcherMap[option];
