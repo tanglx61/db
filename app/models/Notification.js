@@ -65,6 +65,31 @@ exports.populate = function(opts, callback) {
 	});
 };	
 
+
+exports.populateRead = function(opts, callback) {
+
+};
+
+function readNotification(opts, callback) {
+	var id, idValue;
+	if (opts.uid) {
+		id = 'uid';
+		idValue = opts.uid;
+	} else if (opts.nid) {
+		id = 'nid';
+		idValue = opts.nid;
+	} else {
+		callback('no nid or uid defined');
+	}
+
+	var statement = String.format("UPDATE \"Notification\" SET \"read_on\"=NOW() WHERE \"{0}\"='{1}'", id, idValue );
+
+
+	opts.db.query(statement, callback);
+}
+
+
+
 function create(opts, callback) {
 	var db = opts.db;
 	var n = opts.notification;
@@ -72,6 +97,6 @@ function create(opts, callback) {
 	var statement = sqlutil.formatInsertStatement('Notification', ['uid', 'from', 'type', 'content'], null);
 
 	statement += String.format("\nSELECT '{0}', '{1}', '{2}', (\"username\" || ' {3}') FROM \"User\" WHERE \"uid\"='{1}';", n.uid, n.from, n.type, n.content);
-	console.log(statement);
+	//console.log(statement);
 	db.query(statement, callback);
 }

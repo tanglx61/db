@@ -67,7 +67,8 @@ function initDatabase(callback) {
 		populateUsers,
 		populateCategories,
 		populatePosts,
-		populateComments
+		populateComments,
+		populateNotifications
 	], callback);
 }
 
@@ -82,7 +83,7 @@ var dispatcherMap = {
 	'--categories': populateCategories,
 	'--posts': populatePosts,
 	'--comments': populateComments,
-	'--notifications' : populateNotifications
+	'--notifications' : populateNotifications,
 };
 
 var f = dispatcherMap[option];
