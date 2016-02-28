@@ -6,6 +6,7 @@ var _ = require('lodash');
 var faker = require('faker');
 var chalk = require('chalk');
 var async = require('async');
+var bar = require('../progress');
 
 var config = require('../config');
 var DEFAULT_USER_COUNT = config.users;
@@ -20,6 +21,8 @@ exports.populate = function(opts, callback) {
 	var c = opts.count;
 	var count = (c && Number(c))  || DEFAULT_USER_COUNT;
 	console.info('populating ' + count + ' Users...');
+
+	bar.init(count);
 
 	var db = opts.db;
 	var chunkSize = config.chunkSize;
@@ -39,6 +42,7 @@ exports.populate = function(opts, callback) {
 
 	if (useApplicationLogic) {
 		async.eachSeries(users, function(user, next) {
+			bar.tick();
 			create({db: db, username:user[0], password:user[1], email:user[2], photoUrl:user[3]}, function(err){
 				next(err);
 			});

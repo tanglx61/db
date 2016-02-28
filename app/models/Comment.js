@@ -6,6 +6,8 @@ var chalk = require('chalk');
 var faker = require('faker');
 var _ = require('lodash');
 
+var bar = require('../progress');
+
 var config = require('../config');
 var DEFAULT_COMMENT_COUNT = config.comments;
 
@@ -18,6 +20,7 @@ exports.populate = function(opts, callback) {
 	var count = (c && Number(c))  || DEFAULT_COMMENT_COUNT;
 
 	console.info('populating ' + count + ' Comments...');
+	bar.init(count);
 
 	var comments = [];
 
@@ -32,6 +35,7 @@ exports.populate = function(opts, callback) {
 
 
 	async.eachSeries(comments, function(comment, next){
+		bar.tick();
 		create({db: opts.db, comment: comment}, next);
 	}, function(err){
 		console.timeEnd('populateComments');

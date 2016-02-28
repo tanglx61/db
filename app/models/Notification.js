@@ -8,6 +8,7 @@ var _ = require('lodash');
 
 var config = require('../config');
 var sqlutil = require('../sqlutil');
+var bar = require('../progress');
 
 
 var DEFAULT_NOTIFICATION_COUNT = config.notifications;
@@ -42,6 +43,7 @@ exports.populate = function(opts, callback) {
 	var count = (c && Number(c))  || DEFAULT_NOTIFICATION_COUNT;
 
 	console.info('populating ' + count + ' Notifications...');
+	bar.init(count);
 
 	var notifs = [];
 
@@ -58,6 +60,7 @@ exports.populate = function(opts, callback) {
 
 
 	async.eachSeries(notifs, function(notification, next){
+		bar.tick();
 		create({db: opts.db, notification: notification}, next);
 	}, function(err){
 		console.timeEnd('populateNotifications');

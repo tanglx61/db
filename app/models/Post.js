@@ -11,6 +11,7 @@ var DEFAULT_POST_COUNT = config.posts;
 
 var Category = require('./Category');
 var Tag = require('./Tag');
+var bar = require('../progress');
 
 
 
@@ -21,6 +22,8 @@ exports.populate = function(opts, callback) {
 	var count = (c && Number(c))  || DEFAULT_POST_COUNT;
 
 	console.info('populating ' + count + ' Posts...');
+
+	bar.init(count);
 
 	var db = opts.db;
 	var title, content;
@@ -46,6 +49,7 @@ exports.populate = function(opts, callback) {
 	}
 
 	async.eachSeries(posts, function(post, next){
+		bar.tick();
 		create({db: db, post: post}, next);
 	}, function(err){
 		console.timeEnd('populatePosts');
