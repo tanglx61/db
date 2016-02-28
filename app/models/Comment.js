@@ -44,7 +44,7 @@ function create(opts, callback) {
 	var comment = opts.comment;
 
 	var statement = getInsertCommentStatement(comment.content, comment.pid, comment.uid);
-	console.log(statement);
+	//onsole.log(statement);
 	db.query(statement, callback);
 }
 

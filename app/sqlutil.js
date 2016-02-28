@@ -1,9 +1,3 @@
-if(!String.prototype.addSlashes){
-   String.prototype.addSlashes = function() { 
-	   return this.replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
-	};
-}
-
 function escapeString(val) {
   val = val.replace(/[\0\n\r\b\t\\'"\x1a]/g, function (s) {
     switch (s) {
@@ -40,8 +34,8 @@ function formatAttributes(params, singleQuotes) {
 	for (var i=0; i<params.length; i++){
 		var p = params[i];
 
-		if (p.addSlashes) {
-			p = p.addSlashes();
+		if (isString(p)) {
+			p = escapeString(p);
 		}
 
 		if (p.variable) {
