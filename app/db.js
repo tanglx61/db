@@ -2,11 +2,11 @@
 'use strict';
 
 var pg = require('pg');
-var databaseName = 'comp421';
-var conString = "postgres://localhost/" + databaseName;
+var config = require('./config');
+var dbpath = config.dbpath;
 var async = require('async');
 
-var client = new pg.Client(conString);
+var client = new pg.Client(dbpath);
 
 
 exports.ready = function(callback) {

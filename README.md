@@ -1,8 +1,7 @@
 1. install Node JS (https://nodejs.org/en/)
-2. ```git clone https://github.com/tanglx61/db```
-3. ```cd db```
-4. ```npm install```
-5. ```node app {arg1} {arg2}```
+2. ```git clone https://github.com/tanglx61/db && cd db && npm install```
+3. change ```dbpath``` in ```app/config.js```
+5. now you are ready to run, ```node app {arg1} {arg2}```
 
 arg1 | arg2 | description
 -----| ---- | ------------
