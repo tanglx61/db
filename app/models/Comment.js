@@ -31,7 +31,8 @@ exports.populate = function(opts, callback) {
 		comments.push({
 			content: faker.hacker.phrase(),
 			uid: faker.random.number({min:1, max:config.users}),
-			pid: faker.random.number({min:1, max:config.posts})
+			pid: faker.random.number({min:1, max:config.posts}),
+			ts: String.format("(NOW() - '{0} seconds'::INTERVAL)", faker.random.number({min:0, max:864000}))
 		});
 	}
 
@@ -47,21 +48,23 @@ exports.populate = function(opts, callback) {
 
 function create(opts, callback) {
 	var db = opts.db;
-	var comment = opts.comment;
 
-	var statement = getInsertCommentStatement(comment.content, comment.pid, comment.uid);
+	var statement = getInsertCommentStatement(opts.comment);
 	//onsole.log(statement);
 	db.query(statement, callback);
 }
 
 
 
-function getInsertCommentStatement(content, pid, uid) {
-	var statement = sqlutil.formatInsertStatement('Comment', ['content', 'pid', 'uid'], [[content, pid, uid]]);
+function getInsertCommentStatement(comment) {
+	var statement = sqlutil.formatInsertStatement('Comment', 
+		['content', 'pid', 'uid', 'timestamp'], 
+		[[comment.content, comment.pid, comment.uid, {variable: comment.ts}]]);
 
 	statement += Event.getCreateEventStatement({
-		uid: uid, 
-		type: Event.EventTypes.COMMENT_CREATED
+		uid: comment.uid, 
+		type: Event.EventTypes.COMMENT_CREATED,
+		ts: comment.ts
 	});
 	
 	return statement;	

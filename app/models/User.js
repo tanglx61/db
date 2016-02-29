@@ -82,12 +82,16 @@ function create(opts, callback) {
 	var password = opts.password;
 	var email = opts.email;
 	var photoUrl = opts.photoUrl;
+	var ts = String.format("(NOW() - '{0} seconds'::INTERVAL)", faker.random.number({min:0, max:864000}));
 
 	var statement = 
 	"DO $$ \n" + 
 	"DECLARE current_id integer;\n" + 
 	"BEGIN\n" +
-	sqlutil.formatInsertStatement('User', ['username', 'password', 'email', 'photo_url'], [[username, password, email, photoUrl]], false) + ' RETURNING uid INTO current_id;\n' +
+	sqlutil.formatInsertStatement('User', 
+		['username', 'password', 'email', 'photo_url', 'created_on'], 
+		[[username, password, email, photoUrl, {variable: ts}]], false) + 
+	' RETURNING uid INTO current_id;\n' +
 
 	"INSERT INTO \"AnalyticsProfile\"(\"uid\", \"last_update\") VALUES (current_id, NOW());\n" +
 	"END $$;";

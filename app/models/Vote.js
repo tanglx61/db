@@ -70,11 +70,11 @@ function create(opts, callback) {
 
 
 	var statement;
-
-	var event = {uid: vote.uid};
+	var ts = String.format("(NOW() - '{0} seconds'::INTERVAL)", faker.random.number({min:0, max:864000}));
+	var event = {uid: vote.uid, ts:ts};
 
 	if (vote.pid) {
-		statement = sqlutil.formatInsertStatement('PostVote', ['uid', 'pid', 'vote'], [[vote.uid, vote.pid, vote.vote]]);
+		statement = sqlutil.formatInsertStatement('PostVote', ['uid', 'pid', 'vote', 'timestamp'], [[vote.uid, vote.pid, vote.vote, {variable: ts}]]);
 		statement += String.format("UPDATE \"Post\" SET \"votes\" = \"votes\" + '{0}' WHERE \"pid\"='{1}';\n", vote.vote, vote.pid);
 		event.type = vote.vote == 1 ? Event.EventTypes.POST_UPVOTED : Event.EventTypes.POST_DOWNVOTED;
 	} else {

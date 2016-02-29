@@ -48,7 +48,8 @@ exports.populate = function(opts, callback) {
 
 		var event = {
 			type: type,
-			uid: faker.random.number({min:1, max:config.users})
+			uid: faker.random.number({min:1, max:config.users}),
+			ts: String.format("(NOW() - '{0} seconds'::INTERVAL)", faker.random.number({min:0, max:864000}))
 		};
 
 		//either a quick glimpse or professional procrastinator
@@ -90,12 +91,12 @@ function getCreateEventStatement(event) {
 		case EventTypes.POST_CREATED:
 		case EventTypes.COMMENT_CREATED:
 		case EventTypes.SITE_VISITED:
-			statement = sqlutil.formatInsertStatement('Event', ['type', 'uid'], [[event.type, event.uid]]);
+			statement = sqlutil.formatInsertStatement('Event', ['type', 'uid', 'timestamp'], [[event.type, event.uid, {variable: event.ts}]]);
 			break;
 
 		case EventTypes.POST_VIEWED:
 		case EventTypes.BROWSING:
-			statement = sqlutil.formatInsertStatement('Event', ['type', 'uid', 'data'], [[event.type, event.uid, event.data]]);
+			statement = sqlutil.formatInsertStatement('Event', ['type', 'uid', 'data', 'timestamp'], [[event.type, event.uid, event.data, {variable: event.ts}]]);
 			break;
 	}
 

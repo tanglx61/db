@@ -54,7 +54,8 @@ exports.populate = function(opts, callback) {
 			from: faker.random.number({min:1, max:config.users}),
 			uid: faker.random.number({min:1, max:config.users}),
 			type: type,
-			content: createNotificationContent(type)
+			content: createNotificationContent(type),
+			ts: String.format("(NOW() - '{0} seconds'::INTERVAL)", faker.random.number({min:0, max:864000}))
 		});
 	}
 
@@ -97,9 +98,9 @@ function create(opts, callback) {
 	var db = opts.db;
 	var n = opts.notification;
 
-	var statement = sqlutil.formatInsertStatement('Notification', ['uid', 'from', 'type', 'content'], null);
+	var statement = sqlutil.formatInsertStatement('Notification', ['uid', 'from', 'type', 'content', 'timestamp'], null);
 
-	statement += String.format("\nSELECT '{0}', '{1}', '{2}', (\"username\" || ' {3}') FROM \"User\" WHERE \"uid\"='{1}';", n.uid, n.from, n.type, n.content);
+	statement += String.format("\nSELECT '{0}', '{1}', '{2}', (\"username\" || ' {3}'), {4} FROM \"User\" WHERE \"uid\"='{1}';", n.uid, n.from, n.type, n.content, n.ts);
 	//console.log(statement);
 	db.query(statement, callback);
 }

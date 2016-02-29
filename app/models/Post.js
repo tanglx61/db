@@ -38,7 +38,8 @@ exports.populate = function(opts, callback) {
 			content: faker.image.imageUrl(),
 			uid: faker.random.number({min:1, max:config.users}),
 			categories: Category.randomCatIds(),
-			tags: Tag.randomTags()
+			tags: Tag.randomTags(),
+			ts: String.format("(NOW() - '{0} seconds'::INTERVAL)", faker.random.number({min:0, max:864000}))
 		};
 
 
@@ -75,7 +76,11 @@ function create(opts, callback) {
 	"DO $$ \n" + 
 	"DECLARE current_pid integer;\n" + 
 	"BEGIN\n" +
-	sqlutil.formatInsertStatement('Post', ['title', 'content', 'uid'], [[post.title, post.content, post.uid]], false) + ' RETURNING pid INTO current_pid;\n';
+	sqlutil.formatInsertStatement('Post', 
+		['title', 'content', 'uid', 'timestamp'], 
+		[[post.title, post.content, post.uid, {variable: post.ts}]], 
+		false) + 
+	' RETURNING pid INTO current_pid;\n';
 
 	_.each(post.categories, function(cat){
 		statement += "INSERT INTO \"PostCategory\"(\"pid\", \"catId\") VALUES (current_pid, '" +  cat + "');\n";
@@ -84,7 +89,8 @@ function create(opts, callback) {
 
 	statement += Event.getCreateEventStatement({
 		uid: post.uid, 
-		type: Event.EventTypes.POST_CREATED
+		type: Event.EventTypes.POST_CREATED,
+		ts: post.ts
 	});
 
 	if (post.tags) {
