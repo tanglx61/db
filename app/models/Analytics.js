@@ -10,15 +10,18 @@ var async = require('async');
 var config = require('../config');
 
 var bar = require('../progress');
+var scripts = require('../scripts');
 
 
 exports.analyze = function(opts, callback) {
 	if (opts.uid) {
+		var statement = String.format(scripts.updateAnalytics, opts.uid);
 
+		opts.db.query(statement, callback);
 	}
 };
 
 
 function analyzeUser(db, uid, callback) {
-	
+
 }
