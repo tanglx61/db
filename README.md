@@ -18,4 +18,4 @@ arg1 | arg2 | description
 --events-browsing | n: Int | populate n browsing events
 --events-visits | n: Int | populate n site visits events
 --events-postviews | n: Int | populate n post view events
---analyze | uid: Int | update AnalyticsProfile for a the user with uid
+--analyze | uid: Int | update AnalyticsProfile for a the user with uid. Or do not input any uid to run analysis over the entire User set (from 1 to config.users)
