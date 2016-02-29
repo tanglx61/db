@@ -1,4 +1,4 @@
-var MULTIPLIER = 100;
+var MULTIPLIER = 1000;
 
 //try to keep the ratio (they're carefully calibrated), change the MULTIPLIER value instead for bigger dataset
 var config = {
@@ -7,7 +7,7 @@ var config = {
 	comments: 30 * MULTIPLIER,
 	notifications: 2 * MULTIPLIER,
 	votes: {
-		posts: 4 * MULTIPLIER,
+		posts: 4 * MULTIPLIER * MULTIPLIER,
 		comments: 6 * MULTIPLIER,
 	},
 	events: {

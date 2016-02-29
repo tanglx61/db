@@ -38,7 +38,7 @@ exports.populate = function(opts, callback) {
 	for (var i=0; i<count; i++) {
 		var vote = {
 			uid: faker.random.number({min:1, max:config.users}),
-			vote: (faker.random.boolean() ? 1 : -1)
+			vote: faker.random.number({min:0, max:100}) < 90 ? 1 : -1
 		};
 
 
@@ -75,9 +75,11 @@ function create(opts, callback) {
 
 	if (vote.pid) {
 		statement = sqlutil.formatInsertStatement('PostVote', ['uid', 'pid', 'vote'], [[vote.uid, vote.pid, vote.vote]]);
+		statement += String.format("UPDATE \"Post\" SET \"votes\" = \"votes\" + '{0}' WHERE \"pid\"='{1}';\n", vote.vote, vote.pid);
 		event.type = vote.vote == 1 ? Event.EventTypes.POST_UPVOTED : Event.EventTypes.POST_DOWNVOTED;
 	} else {
 		statement = sqlutil.formatInsertStatement('CommentVote', ['uid', 'cid', 'vote'], [[vote.uid, vote.cid, vote.vote]]);
+		statement += String.format("UPDATE \"Comment\" SET \"votes\" = \"votes\" + '{0}' WHERE \"cid\"='{1}';\n", vote.vote, vote.cid);
 		event.type = vote.vote == 1 ? Event.EventTypes.COMMENT_UPVOTED : Event.EventTypes.COMMENT_DOWNVOTED;
 	}
 
