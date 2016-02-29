@@ -41,8 +41,6 @@ exports.populate = function(opts, callback) {
 		};
 
 
-		
-
 		if (isPost) {
 			vote.pid = faker.random.number({min:1, max:config.posts});
 		} else {

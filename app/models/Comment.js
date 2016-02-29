@@ -13,6 +13,8 @@ var DEFAULT_COMMENT_COUNT = config.comments;
 
 var sqlutil = require('../sqlutil');
 
+var Event = require('./Event');
+
 exports.populate = function(opts, callback) {
 	console.time('populateComments');
 
@@ -55,5 +57,7 @@ function create(opts, callback) {
 
 
 function getInsertCommentStatement(content, pid, uid) {
-	return sqlutil.formatInsertStatement('Comment', ['content', 'pid', 'uid'], [[content, pid, uid]]);
+	var statement = sqlutil.formatInsertStatement('Comment', ['content', 'pid', 'uid'], [[content, pid, uid]]);
+
+	return statement;	
 }

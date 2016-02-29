@@ -36,5 +36,5 @@ CommentVote(*uid*, *cid*, vote)
 AnalyticsProfile(**apid**, totalVisits, totalPosts, totalComments, totalPostsViewed, totalBrowsingDuration, totalPostVotes, totalCommentVotes, totalPostViewed, lastUpdatedOn, *uid*)
 * uid -\> User
 
-Event(**eid**, type, data, timestamp, *apid* )
-* apid -\> AnalyticsProfile
+Event(**eid**, type, data, timestamp, *uid* )
+* uid -\> User

@@ -82,6 +82,7 @@ CREATE TABLE "PostVote" (
     "pid" integer NOT NULL,
     "uid" integer NOT NULL,
     "vote" integer NOT NULL,
+    "timestamp" timestamp NOT NULL DEFAULT NOW(),
     FOREIGN KEY ("pid") REFERENCES "Post"("pid"),
     FOREIGN KEY ("uid") REFERENCES "User"("uid")
 );
@@ -115,11 +116,11 @@ CREATE TABLE "AnalyticsProfile" (
 CREATE TABLE "Event" (
     "eid" serial,
     "type" text NOT NULL,
-    "data" integer NOT NULL,
+    "data" integer,
     "timestamp" timestamp NOT NULL DEFAULT NOW(),
-    "apid" integer NOT NULL,
+    "uid" integer NOT NULL,
     PRIMARY KEY ("eid"),
-    FOREIGN KEY ("apid") REFERENCES "AnalyticsProfile"("apid")
+    FOREIGN KEY ("uid") REFERENCES "User"("uid")
 );
 
 
