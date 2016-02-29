@@ -7,7 +7,7 @@ var config = {
 	comments: 30 * MULTIPLIER,
 	notifications: 2 * MULTIPLIER,
 	votes: {
-		posts: 4 * MULTIPLIER * MULTIPLIER,
+		posts: 0.1 * MULTIPLIER * MULTIPLIER,
 		comments: 6 * MULTIPLIER,
 	},
 	events: {
