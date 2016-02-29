@@ -1,5 +1,6 @@
 /*
-List the usernames and uid of the users who have been most active in creating posts in the past 24 hours, as well as the number of Posts they created.
+List the usernames and uid of the users who have been most active in creating posts in the past N days, 
+as well as the number of Posts they created.
 */
 
 SELECT * 
@@ -10,15 +11,16 @@ FROM
 	WHERE "timestamp" > NOW() - '1 day'::INTERVAL 
 	GROUP BY "uid" 
 	ORDER BY c DESC
+	LIMIT 10
 	) AS T1
 
-LEFT JOIN 
+	JOIN 
+
 	(
 	SELECT uid, username
 	FROM "User"
 	) AS T2
 	
-ON T1.uid = T2.uid
-
-LIMIT 10;
+	ON T1.uid = T2.uid
+ORDER BY c DESC;
 
