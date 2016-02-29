@@ -14,14 +14,30 @@ var scripts = require('../scripts');
 
 
 exports.analyze = function(opts, callback) {
-	if (opts.uid) {
-		var statement = String.format(scripts.updateAnalytics, opts.uid);
+	
 
-		opts.db.query(statement, callback);
+	if (opts.uid) {
+		console.info('analyzing user ' + opts.uid);
+		analyzeUser(opts.db, opts.uid, callback);
+	} else {
+		console.info('analyzing users 1 to ' + config.users);
+		console.time('analytics');
+		var uids = [];
+		for (var i=1; i<=config.users; i++) {
+			uids.push(i);
+		}
+
+		async.eachSeries(uids, function(uid, next){
+			analyzeUser(opts.db, uid, next);
+		}, function(err) {
+			console.timeEnd('analytics');
+			if (callback) callback(err);
+		});
 	}
 };
 
 
 function analyzeUser(db, uid, callback) {
-
+	var statement = String.format(scripts.updateAnalytics, uid);
+	db.query(statement, callback);
 }
