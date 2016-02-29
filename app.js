@@ -101,7 +101,8 @@ function initDatabase(callback) {
 		populateCommentVotes,
 		populateBrowsingEvents,
 		populateVisitEvents,
-		populatePostViewEvents
+		populatePostViewEvents,
+		compileAnalytics
 	], callback);
 }
 

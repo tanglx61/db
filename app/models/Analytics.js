@@ -12,6 +12,8 @@ var config = require('../config');
 var bar = require('../progress');
 var scripts = require('../scripts');
 
+var bar = require('../progress');
+
 
 exports.analyze = function(opts, callback) {
 	
@@ -20,14 +22,17 @@ exports.analyze = function(opts, callback) {
 		console.info('analyzing user ' + opts.uid);
 		analyzeUser(opts.db, opts.uid, callback);
 	} else {
-		console.info('analyzing users 1 to ' + config.users);
+		console.info('analyzing users 1 to ' + config.users + '...');
 		console.time('analytics');
+
+		bar.init(config.users);
 		var uids = [];
 		for (var i=1; i<=config.users; i++) {
 			uids.push(i);
 		}
 
 		async.eachSeries(uids, function(uid, next){
+			bar.tick();
 			analyzeUser(opts.db, uid, next);
 		}, function(err) {
 			console.timeEnd('analytics');

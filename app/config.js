@@ -1,4 +1,4 @@
-var MULTIPLIER = 10;
+var MULTIPLIER = 100;
 
 //try to keep the ratio (they're carefully calibrated), change the MULTIPLIER value instead for bigger dataset
 var config = {
