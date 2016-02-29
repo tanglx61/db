@@ -15,3 +15,7 @@ arg1 | arg2 | description
 --notifications | n: Int | populate n notifications
 --postvotes | n: Int | populate n postvotes
 --commentvotes | n: Int | populate n commentvotes
+--events-browsing | n: Int | populate n browsing events
+--events-visits | n: Int | populate n site visits events
+--events-postviews | n: Int | populate n post view events
+--analyze | uid: Int | update AnalyticsProfile for a the user with uid

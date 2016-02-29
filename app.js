@@ -20,6 +20,7 @@ var Comment = require('./app/models/Comment');
 var Notification = require('./app/models/Notification');
 var Vote = require('./app/models/Vote');
 var Event = require('./app/models/Event');
+var Analytics = require('./app/models/Analytics');
 
 var option = process.argv[2];
 var optionValue = process.argv[3];
@@ -81,6 +82,10 @@ function populatePostViewEvents(callback) {
 }
 
 
+function compileAnalytics(callback) {
+	Analytics.analyze({db: db, uid: optionValue}, callback);
+}
+
 
 function initDatabase(callback) {
 	console.log('running automated database population with ' + config.users +'Users, ' + config.posts + ' Posts');
@@ -116,7 +121,8 @@ var dispatcherMap = {
 	'--commentvotes': populateCommentVotes,
 	'--events-browsing': populateBrowsingEvents,
 	'--events-visits': populateVisitEvents,
-	'--events-postviews': populatePostViewEvents
+	'--events-postviews': populatePostViewEvents,
+	'--analytics': compileAnalytics
 };
 
 var f = dispatcherMap[option];
