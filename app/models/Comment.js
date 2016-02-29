@@ -59,5 +59,10 @@ function create(opts, callback) {
 function getInsertCommentStatement(content, pid, uid) {
 	var statement = sqlutil.formatInsertStatement('Comment', ['content', 'pid', 'uid'], [[content, pid, uid]]);
 
+	statement += Event.getCreateEventStatement({
+		uid: uid, 
+		type: Event.EventTypes.COMMENT_CREATED
+	});
+	
 	return statement;	
 }

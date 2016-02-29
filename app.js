@@ -19,6 +19,7 @@ var Post = require('./app/models/Post');
 var Comment = require('./app/models/Comment');
 var Notification = require('./app/models/Notification');
 var Vote = require('./app/models/Vote');
+var Event = require('./app/models/Event');
 
 var option = process.argv[2];
 var optionValue = process.argv[3];
@@ -67,6 +68,19 @@ function populateCommentVotes(callback) {
 	Vote.populate({db: db, count: optionValue, isPost: false}, callback);
 }
 
+function populateBrowsingEvents(callback) {
+	Event.populate({db: db, count: optionValue, type: Event.EventTypes.BROWSING}, callback);
+}
+
+function populateVisitEvents(callback) {
+	Event.populate({db: db, count: optionValue, type: Event.EventTypes.SITE_VISITED}, callback);
+}
+
+function populatePostViewEvents(callback) {
+	Event.populate({db: db, count: optionValue, type: Event.EventTypes.POST_VIEWED}, callback);
+}
+
+
 
 function initDatabase(callback) {
 	console.log('running automated database population with ' + config.users +'Users, ' + config.posts + ' Posts');
@@ -79,7 +93,10 @@ function initDatabase(callback) {
 		populateComments,
 		populateNotifications,
 		populatePostVotes,
-		populateCommentVotes
+		populateCommentVotes,
+		populateBrowsingEvents,
+		populateVisitEvents,
+		populatePostViewEvents
 	], callback);
 }
 
@@ -88,7 +105,7 @@ var dispatcherMap = {
 	"-d": dropTables,
 	"-r": reinitializeTables,
 	"-i": initDatabase,
-	'--users_bulk': bulkPopulatingUsers,
+	'--users-bulk': bulkPopulatingUsers,
 	'--users': populateUsers,
 
 	'--categories': populateCategories,
@@ -96,7 +113,10 @@ var dispatcherMap = {
 	'--comments': populateComments,
 	'--notifications' : populateNotifications,
 	'--postvotes': populatePostVotes,
-	'--commentvotes': populateCommentVotes
+	'--commentvotes': populateCommentVotes,
+	'--events-browsing': populateBrowsingEvents,
+	'--events-visits': populateVisitEvents,
+	'--events-postviews': populatePostViewEvents
 };
 
 var f = dispatcherMap[option];

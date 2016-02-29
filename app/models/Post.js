@@ -12,7 +12,7 @@ var DEFAULT_POST_COUNT = config.posts;
 var Category = require('./Category');
 var Tag = require('./Tag');
 var bar = require('../progress');
-
+var Event = require('./Event');
 
 
 exports.populate = function(opts, callback) {
@@ -81,6 +81,11 @@ function create(opts, callback) {
 		statement += "INSERT INTO \"PostCategory\"(\"pid\", \"catId\") VALUES (current_pid, '" +  cat + "');\n";
 	});
 
+
+	statement += Event.getCreateEventStatement({
+		uid: post.uid, 
+		type: Event.EventTypes.POST_CREATED
+	});
 
 	if (post.tags) {
 		statement += Tag.getTagPostStatement({variable: 'current_pid'}, post.tags);

@@ -11,7 +11,7 @@ var config = require('../config');
 
 var bar = require('../progress');
 
-var DEFAULT_VOTE_COUNT = config.votes;
+var Event = require('./Event');
 
 
 exports.populate = function(opts, callback) {
@@ -20,7 +20,8 @@ exports.populate = function(opts, callback) {
 	var isPost = opts.isPost;
 
 	var c = opts.count;
-	var count = (c && Number(c))  || DEFAULT_VOTE_COUNT;
+	var defaultVoteCount = isPost ? config.votes.posts : config.votes.comments;
+	var count = (c && Number(c))  || defaultVoteCount;
 
 	bar.init(count);
 
@@ -70,11 +71,17 @@ function create(opts, callback) {
 
 	var statement;
 
+	var event = {uid: vote.uid};
+
 	if (vote.pid) {
 		statement = sqlutil.formatInsertStatement('PostVote', ['uid', 'pid', 'vote'], [[vote.uid, vote.pid, vote.vote]]);
+		event.type = vote.vote == 1 ? Event.EventTypes.POST_UPVOTED : Event.EventTypes.POST_DOWNVOTED;
 	} else {
 		statement = sqlutil.formatInsertStatement('CommentVote', ['uid', 'cid', 'vote'], [[vote.uid, vote.cid, vote.vote]]);
+		event.type = vote.vote == 1 ? Event.EventTypes.COMMENT_UPVOTED : Event.EventTypes.COMMENT_DOWNVOTED;
 	}
+
+	statement += Event.getCreateEventStatement(event);
 
 	//console.log(statement);
 	db.query(statement, callback);

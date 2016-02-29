@@ -6,7 +6,15 @@ var config = {
 	posts: 3 * MULTIPLIER,
 	comments: 10 * MULTIPLIER,
 	notifications: 2 * MULTIPLIER,
-	votes: 2 * MULTIPLIER,
+	votes: {
+		posts: 2 * MULTIPLIER,
+		comments: 5 * MULTIPLIER,
+	},
+	events: {
+		browsing: 20 * MULTIPLIER,
+		siteVisited: 20 * MULTIPLIER,
+		postViewed: 15 * MULTIPLIER
+	},
 	chunkSize: 500, 
 	dbpath: "postgres://localhost/comp421"
 };
