@@ -36,7 +36,8 @@ exports.populate = function(opts, callback) {
 
 	for (var i=0; i<count; i++) {
 		var vote = {
-			uid: faker.random.number({min:1, max:config.users})
+			uid: faker.random.number({min:1, max:config.users}),
+			vote: (faker.random.boolean() ? 1 : -1)
 		};
 
 
@@ -72,9 +73,9 @@ function create(opts, callback) {
 	var statement;
 
 	if (vote.pid) {
-		statement = sqlutil.formatInsertStatement('PostVote', ['uid', 'pid'], [[vote.uid, vote.pid]]);
+		statement = sqlutil.formatInsertStatement('PostVote', ['uid', 'pid', 'vote'], [[vote.uid, vote.pid, vote.vote]]);
 	} else {
-		statement = sqlutil.formatInsertStatement('CommentVote', ['uid', 'cid'], [[vote.uid, vote.cid]]);
+		statement = sqlutil.formatInsertStatement('CommentVote', ['uid', 'cid', 'vote'], [[vote.uid, vote.cid, vote.vote]]);
 	}
 
 	//console.log(statement);

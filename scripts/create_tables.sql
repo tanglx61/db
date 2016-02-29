@@ -81,6 +81,7 @@ CREATE TABLE "PostTag" (
 CREATE TABLE "PostVote" (
     "pid" integer NOT NULL,
     "uid" integer NOT NULL,
+    "vote" integer NOT NULL,
     FOREIGN KEY ("pid") REFERENCES "Post"("pid"),
     FOREIGN KEY ("uid") REFERENCES "User"("uid")
 );
@@ -89,6 +90,7 @@ CREATE TABLE "PostVote" (
 CREATE TABLE "CommentVote" (
     "cid" integer NOT NULL,
     "uid" integer NOT NULL,
+    "vote" integer NOT NULL,
     FOREIGN KEY ("cid") REFERENCES "Comment"("cid"),
     FOREIGN KEY ("uid") REFERENCES "User"("uid")
 );
