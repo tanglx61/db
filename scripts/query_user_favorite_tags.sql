@@ -1,3 +1,4 @@
+
 SELECT tag, COUNT(tag) AS count FROM 
 
 	(SELECT "uid" FROM "User" WHERE "username"='Timmothy62') AS U

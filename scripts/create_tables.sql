@@ -81,7 +81,7 @@ CREATE TABLE "PostTag" (
 CREATE TABLE "PostVote" (
     "pid" integer NOT NULL,
     "uid" integer NOT NULL,
-    "vote" integer NOT NULL,
+    "vote" integer NOT NULL CHECK ("vote"='1' OR "vote"='-1'),
     "timestamp" timestamp NOT NULL DEFAULT NOW(),
     FOREIGN KEY ("pid") REFERENCES "Post"("pid"),
     FOREIGN KEY ("uid") REFERENCES "User"("uid")

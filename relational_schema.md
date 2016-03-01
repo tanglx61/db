@@ -33,7 +33,7 @@ CommentVote(*uid*, *cid*, vote)
 * cid -\> Comment
 
 
-AnalyticsProfile(**apid**, totalVisits, totalPosts, totalComments, totalPostsViewed, totalBrowsingDuration, totalPostVotes, totalCommentVotes, totalPostViewed, lastUpdatedOn, *uid*)
+AnalyticsProfile(**apid**, total_visits, total_posts, total_comments, total_posts_viewed, total_browsing_duration, total_post_upvotes, total_post_downvotes, total_comment_upvotes, total_comment_downvotes, , lastUpdatedOn, *uid*)
 * uid -\> User
 
 Event(**eid**, type, data, timestamp, *uid* )
