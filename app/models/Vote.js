@@ -70,7 +70,7 @@ function create(opts, callback) {
 
 
 	var statement;
-	var ts = String.format("(NOW() - '{0} seconds'::INTERVAL)", faker.random.number({min:0, max:864000}));
+	var ts = opts.ts || String.format("(NOW() - '{0} seconds'::INTERVAL)", faker.random.number({min:0, max:864000}));
 	var event = {uid: vote.uid, ts:ts};
 
 	if (vote.pid) {
@@ -88,3 +88,5 @@ function create(opts, callback) {
 	//console.log(statement);
 	db.query(statement, callback);
 }
+
+exports.create = create;

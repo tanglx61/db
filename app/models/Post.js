@@ -71,7 +71,7 @@ function create(opts, callback) {
 	// var statement = sqlutil.formatInsertStatement('Post', 
 	// 	['title', 'content', 'uid'], 
 	// 	[[post.title, post.content, post.uid]], false) + ' RETURNING pid';
-
+	post.ts = post.ts || "NOW()";
 	var statement = 
 	"DO $$ \n" + 
 	"DECLARE current_pid integer;\n" + 
@@ -106,3 +106,6 @@ function create(opts, callback) {
 	
 
 }
+
+
+exports.create = create;

@@ -46,3 +46,6 @@ function analyzeUser(db, uid, callback) {
 	var statement = String.format(scripts.updateAnalytics, uid);
 	db.query(statement, callback);
 }
+
+
+exports.analyzeUser = analyzeUser;

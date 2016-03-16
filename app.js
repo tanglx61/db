@@ -11,6 +11,7 @@ var DBManager = require('./app/dbman');
 
 
 var config = require('./app/config');
+var app;
 
 
 var User = require('./app/models/User');
@@ -87,6 +88,12 @@ function compileAnalytics(callback) {
 }
 
 
+function initExpress(){
+	app = require('./app/express')(db);
+	
+
+}
+
 function initDatabase(callback) {
 	console.log('running automated database population with ' + config.users +'Users, ' + config.posts + ' Posts');
 	optionValue = null;
@@ -123,7 +130,9 @@ var dispatcherMap = {
 	'--events-browsing': populateBrowsingEvents,
 	'--events-visits': populateVisitEvents,
 	'--events-postviews': populatePostViewEvents,
-	'--analytics': compileAnalytics
+	'--analytics': compileAnalytics,
+
+	'--serve': initExpress
 };
 
 var f = dispatcherMap[option];

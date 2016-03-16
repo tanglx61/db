@@ -71,6 +71,7 @@ exports.populate = function(opts, callback) {
 
 
 
+
 /**
  * create an account with application logic. This will automatically create an AnalyticsProfile for the user as well. See example query at scripts/create_usr.sql
  * 
@@ -82,6 +83,9 @@ function create(opts, callback) {
 	var password = opts.password;
 	var email = opts.email;
 	var photoUrl = opts.photoUrl;
+
+	if (!photoUrl) photoUrl = faker.image.avatar();
+	
 	var ts = String.format("(NOW() - '{0} seconds'::INTERVAL)", faker.random.number({min:0, max:864000}));
 
 	var statement = 

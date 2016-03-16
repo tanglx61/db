@@ -38,6 +38,7 @@ function escapeString(val) {
 
 
 function formatAttributes(params, singleQuotes) {
+	if (params === '*') return params;
 	var quote = singleQuotes ? '\'' : '\"';
 	var s = "(";
 
@@ -105,8 +106,26 @@ exports.formatInsertStatement = function(tableName, attributes, data, terminatin
 exports.escapeString = escapeString;
 
 
+exports.formatSelectStatement = function(tableName, attributes, conditions, extra) {
+	var statement = 'SELECT ' + formatAttributes(attributes, false) + ' FROM "' + tableName + '"' ;
+
+	if (conditions) {
+		statement += ' WHERE ' + conditions;
+	}
+
+	if (extra) {
+		statement += ' ' + extra;
+	}
+
+	statement += ';';
+
+	return statement;
+};
+
 
 function isString(str) {
 	return (typeof str === 'string' || str instanceof String);
 }
+
+
 
